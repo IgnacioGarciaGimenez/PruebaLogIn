@@ -1,8 +1,8 @@
 platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-target 'segundointento' do
-  # Pods for segundointento
+target 'build' do
+  # Pods for build
   pod 'React', :path => '../node_modules/react-native/'
   pod 'React-Core', :path => '../node_modules/react-native/React'
   pod 'React-DevSupport', :path => '../node_modules/react-native/React'
@@ -28,7 +28,11 @@ target 'segundointento' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  target 'segundointentoTests' do
+  pod 'RNAppAuth', :path => '../node_modules/react-native-app-auth'
+
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
+  target 'buildTests' do
     inherit! :search_paths
     # Pods for testing
   end
@@ -36,10 +40,10 @@ target 'segundointento' do
   use_native_modules!
 end
 
-target 'segundointento-tvOS' do
-  # Pods for segundointento-tvOS
+target 'build-tvOS' do
+  # Pods for build-tvOS
 
-  target 'segundointento-tvOSTests' do
+  target 'build-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

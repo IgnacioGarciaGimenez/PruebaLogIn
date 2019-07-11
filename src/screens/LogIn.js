@@ -1,45 +1,42 @@
 import React from 'react';
-import {View, Button, Text} from 'react-native';
+import {View, Button, StyleSheet} from 'react-native';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-native';
 import { logIn } from '../actions';
+import symbolicateStackTrace from 'react-native/Libraries/Core/Devtools/symbolicateStackTrace';
 
 class LogIn extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = { isSignedIn: null}
     }
 
     _logIn = async () => {
         this.props.logIn()
             .then(() => {
-                if (this.props.token.isSignedIn) {
-                    console.log(this.props.token.isSignedIn);
-                    this.setState({isSignedIn: true});
-                }
-                this.setState({isSignedIn: false});
-            });
-        
-    }
-
-    renderLogIn() {
-        if (this.state.isSignedIn === null) {
-            return (
-                <View>
-                    <Button onPress={this._logIn} title="Log in"/>
-                </View>
-            );
-        } else if (this.state.isSignedIn) {
-            return <Redirect to="/home" />;
-        }
-        return <View><Text>{this.props.token.error}</Text></View>
+                this.props.navigation.navigate(this.props.token.isSignedIn ? 'Home' : '');
+            });        
     }
 
     render() {
-        return this.renderLogIn();
+        return (
+            <View style={styles.container}>
+                <Button style={styles.button} onPress={this._logIn} title="Log in"/>
+            </View>
+        );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    button: {
+        position: 'absolute',
+        bottom: 0,
+    }
+});
 
 const mapStateToProps = (state) => {
     return { token: state.token}

@@ -9,38 +9,26 @@ class AuthLoadingScreen extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { isSignedIn: null}
     }
 
     componentDidMount() {
-        console.log("token: " + this.props.token.token);
+        console.log(this.props.token)
         this.props.getUserToken()
             .then(() => {
-                if (this.props.token.isSignedIn === false) {
-                    this.setState({isSignedIn: false});
-                }
-                this.setState({isSignedIn: true});
+                console.log(this.props.token);
+                this.props.navigation.navigate(this.props.token.isSignedIn ? 'Home' : 'LogIn');                
+                console.log(this.props.token)
             });
-
     }
 
-    renderAuth() {        
-        console.log(this.state.isSignedIn);
-        if (this.state.isSignedIn === null) {
-            return (
-                <View style={styles.container}>
-                    <ActivityIndicator />
-                    <StatusBar barStyle="default" />
-                </View>
-            );
-        } else if (this.state.isSignedIn) {
-            return <Redirect to="/home" />;
-        }
-        return <Redirect to="/logIn" />;
-    }
 
     render() {
-        return this.renderAuth();
+        return(
+            <View style={styles.container}>
+                    <ActivityIndicator />
+                    <StatusBar barStyle="default" />
+            </View>
+        );
     }
 }
 
@@ -53,7 +41,6 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-    console.log(state);
     return { token: state.token };
 }
 

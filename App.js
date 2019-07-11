@@ -17,23 +17,23 @@ import {
 } from 'react-native';
 
 import { NativeRouter, Route, Redirect } from 'react-router-native';
+import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
 import LogIn from './src/screens/LogIn';
 import Home from './src/screens/Home';
 
+const AppNavigator = createAppContainer(createSwitchNavigator({
+  AuthLoading: AuthLoadingScreen,
+  Home: Home,
+  LogIn: LogIn,
+}, {
+  initialRouteName: 'AuthLoading',
+}));
+
 const App = () => {
   return (
-    <NativeRouter>
-      <View>
-        <Route path="/" exact component={AuthLoadingScreen}/>
-        <Route path="/home" exact component={Home}/>
-        <Route path="/logIn" exact component={LogIn}/>
-        <Redirect to="/" />
-      </View>
-    </NativeRouter>  
+    <AppNavigator />
   );
 };
-
-
 
 export default App;

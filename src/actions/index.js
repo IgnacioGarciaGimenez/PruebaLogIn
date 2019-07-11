@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { authorize } from 'react-native-app-auth';
+import { authorize, revoke } from 'react-native-app-auth';
 
 const config = {
-    issuer: 'http://192.168.0.44:5000',
+    issuer: 'http://192.168.1.128:5000',
     clientId: 'native.code',
     redirectUrl: 'io.identityserver.demo:/oauthredirect',  
     scopes: ['openid', 'profile', 'offline_access'],
@@ -31,8 +31,9 @@ export const error = error => {
 
 export const getUserToken = () => async dispatch => {
     await AsyncStorage.getItem('token')
-        .then((token) => {
-            if (token !== null) {                
+        .then((t) => {            
+            if (t !== null) {     
+                const token = JSON.parse(t);           
                 dispatch(saveToken(token));
             }
         })
@@ -56,11 +57,18 @@ export const logIn = () => async dispatch => {
     });    
 }
 
-export const logOut = () => dispatch =>
-    AsyncStorage.removeItem('userToken')
+export const logOut = () => async (dispatch, getState) => {
+    console.log(getState().token.token.refreshToken);
+    await revoke(config, { 
+        tokenToRevoke: getState().token.token.refreshToken,
+        sendClientId: true}).then(async () => {
+        await AsyncStorage.removeItem('userToken')
         .then(() => {
             dispatch(removeToken());
         })
         .catch((err) => {
             dispatch(error(err.message || 'ERROR'));
-        })
+        });
+    });
+};
+    
